@@ -4,6 +4,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <cstring>
+
 void socketConnect(const char* ip, const char* msg) {
 sockaddr_in servAddr;
     servAddr.sin_family = AF_INET;
@@ -14,6 +15,23 @@ sockaddr_in servAddr;
     send(clientSoc, msg, strlen(msg), 0);
     close(clientSoc);
 }
-int main() {
-    socketConnect("10.0.2.15", "Kys loser");
+int main(int argc, char* argv[]) {
+    std::string msg,ipA;
+    if (argc < 2) {
+            std::cout << "Please enter the IP address which you wish to connect to" << std::endl;
+            std::cin >> ipA;
+            std::cout << "Please enter the message which you wish to send" << std::endl;
+            std::getline(std::cin, msg);
+            
+    }
+    else if (argc<3) {
+            ipA = argv[1];
+            std::cout << "Please enter the message which you wish to send" << std::endl;
+            std::getline(std::cin, msg);
+}
+        else {
+            ipA=argv[1];
+            msg=argv[2];
+        }
+    socketConnect(ipA.c_str(), msg.c_str());
 }

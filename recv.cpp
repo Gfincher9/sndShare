@@ -17,6 +17,15 @@ void socketConnect(const char* ip) {
 std::cout << buff <<  std::endl;
 close(servSoc);
 }
-int main() {
-    socketConnect("10.0.2.15");
+int main(int argc, char* argv[]) {
+    std::string ipA;
+    if (argc < 2) {
+        std::cout << "Please enter the IP address which you wish to connect to" << std::endl;
+        std::cin >> ipA;
+    }
+    else {
+        ipA=argv[1];
+    }
+    std::cout << "Listening for a message from " << ipA << std::endl;
+    socketConnect(ipA.c_str());
 }
