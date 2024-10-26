@@ -24,11 +24,11 @@ void socketConnect(const char* ip) {
     servAddr.sin_port = htons(port);
     servAddr.sin_addr.s_addr = inet_addr(ip);
     bind(servSoc, (struct sockaddr*)&servAddr, sizeof(servAddr));
-    listen(servSoc, 5);
+    listen(servSoc, 0);
     int clientSoc=accept(servSoc, nullptr, nullptr);
-    char buff[1024] = { 0 };
+    char buff[2048] = { 0 };
     recv(clientSoc, buff, sizeof(buff), 0);
-std::cout << buff <<  std::endl;
+    std::cout << buff <<  std::endl;
 close(servSoc);
 }
 int main(int argc, char* argv[]) {

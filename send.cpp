@@ -33,7 +33,7 @@ sockaddr_in servAddr;
     if (sockSuccess == 0) {
      send(clientSoc, msg, strlen(msg), 0);
      close(clientSoc);
-     std::cout << "Message delivered!";
+     std::cout << "Message delivered!" << std::endl;
     }
     
 }

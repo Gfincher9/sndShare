@@ -1,1 +1,2 @@
-1. Add config file for constant IP to connect to
+1. Add config file for constant IP to connect to.
+2. Allow file input 
