@@ -4,6 +4,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include <sys/stat.h>
+#include <fstream>
 int port = { 0 };
 void confFetch() { //Check config file for persistent settings
     char buf[11];
@@ -18,6 +20,10 @@ void confFetch() { //Check config file for persistent settings
     port = std::stoi(newbuf);
 }
 void socketConnect(const char* ip, const char* path) {
+    //struct for filesize
+    struct stat *fileSizeBuf;
+    stat(path, fileSizeBuf);
+    int fileSize = fileSizeBuf->st_size;
     //Struct for socket creation
     sockaddr_in servAddr;
     servAddr.sin_family = AF_INET;
@@ -44,19 +50,42 @@ void socketConnect(const char* ip, const char* path) {
     }
 
     else {
+    fclose(fp);
     char buf[1024];
-    while (fgets(buf, 1024, fp)!=NULL) { //SEND ALGO: MAKE TEMP FILE thats exact replica of file, (e.g. todo.txt). Send first 1024 bytes of data from temp.  clean array. Remove 1024 bits from temp.  repeat filesize/1024 times  
-     send(clientSoc, buf, strlen(buf), 0); //send data
+    std::ifstream file(path);
+        for (int i = 0; i*1024 < fileSize; i++) {
+            if (((i+1)*1024) > fileSize) {
+                file.seekg((i*1024), std::ios::beg); 
+                file.read(buf,(fileSize%1024));
+                std::cout << buf << "\n";
+                std::fill_n(buf, 1024, ' ');
+            }
+            else {
+               file.seekg(i*1024, std::ios::beg);
+               file.read(buf, 1024);
+               std::cout << buf << "\n";
+               std::fill_n(buf, 1024, ' ');
+            }
+        }
+            
+        
+        
+        }
+    
+
+        
+    /*while (fgets(buf, 1024, fp)!=NULL) { //SEND ALGO: MAKE TEMP FILE thats exact replica of file, (e.g. todo.txt). Send first 1024 bytes of data from temp.  clean array. Remove 1024 bits from temp.  repeat filesize/1024 times  
+    send(clientSoc, buf, strlen(buf), 0); //send data
     }
      //cleanup
      fclose(fp);
      close(clientSoc);
      
      std::cout << "Data delivered!" << std::endl;
+    */
     }
     }
     
-}
 int main(int argc, char* argv[]) {
     confFetch(); //Check snd.conf for config settings
     std::string path,ipA;

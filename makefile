@@ -1,6 +1,6 @@
 CXX=g++
 CC=gcc
-CXXFLAGS=$(-O3, -fomit-frame-pointer, -Werror, -Wall)
+CXXFLAGS=$(-O3, -fomit-frame-pointer, -Werror, -Wall -g)
 
 SendRecv:
 	$(CXX) $(CXXFLAGS) send.cpp -o send
