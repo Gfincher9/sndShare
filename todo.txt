@@ -1,2 +1,2 @@
 1. Add config file for constant IP to connect to.
-2. Allow file input 
+2. Protocol to send files with sizes above 1kb
