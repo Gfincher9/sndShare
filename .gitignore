@@ -1,6 +1,7 @@
 recv
 send
 .vscode/
+bak/
 a.out
 test.cpp
 test.c
