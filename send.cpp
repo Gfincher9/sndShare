@@ -21,9 +21,9 @@ void confFetch() { //Check config file for persistent settings
 }
 void socketConnect(const char* ip, const char* path) {
     //struct for filesize
-    struct stat *fileSizeBuf;
-    stat(path, fileSizeBuf);
-    int fileSize = fileSizeBuf->st_size;
+    struct stat fileSizeBuf;
+    stat(path, &fileSizeBuf);
+    int fileSize = fileSizeBuf.st_size;
     //Struct for socket creation
     sockaddr_in servAddr;
     servAddr.sin_family = AF_INET;
@@ -57,32 +57,22 @@ void socketConnect(const char* ip, const char* path) {
             if (((i+1)*1024) > fileSize) {
                 file.seekg((i*1024), std::ios::beg); 
                 file.read(buf,(fileSize%1024));
-                std::cout << buf << "\n";
-                std::fill_n(buf, 1024, ' ');
+                send(clientSoc, buf, (fileSize%1024), 0);
+                for (int j = (fileSize%1024); j < 1024; j++) {
+                    buf[j]='\0';
+                }
+                file.close();
             }
             else {
                file.seekg(i*1024, std::ios::beg);
                file.read(buf, 1024);
-               std::cout << buf << "\n";
-               std::fill_n(buf, 1024, ' ');
+               send(clientSoc, buf, 1024, 0);
+               std::fill_n(buf, 1024, '_');
             }
         }
-            
-        
-        
         }
-    
-
-        
-    /*while (fgets(buf, 1024, fp)!=NULL) { //SEND ALGO: MAKE TEMP FILE thats exact replica of file, (e.g. todo.txt). Send first 1024 bytes of data from temp.  clean array. Remove 1024 bits from temp.  repeat filesize/1024 times  
-    send(clientSoc, buf, strlen(buf), 0); //send data
-    }
-     //cleanup
-     fclose(fp);
-     close(clientSoc);
-     
-     std::cout << "Data delivered!" << std::endl;
-    */
+    close(clientSoc);
+    std::cout << "Data delivered!" << std::endl;
     }
     }
     
@@ -99,7 +89,7 @@ int main(int argc, char* argv[]) {
             
     }
     
-    else if (argc == 2) {
+    else if (argc == 2) { //doesn't work rn... :(
             ipA = argv[1];
             std::cout << "Please enter the path to the file which you wish to send" << std::endl;
             std::getline(std::cin, path);
