@@ -33,9 +33,15 @@ void socketConnect(const char* ip) {
     listen(servSoc, 0); //wait for connection
 
     int clientSoc=accept(servSoc, nullptr, nullptr); //once connection is found... accept it
+    int nRecvs = 0;
+    recv(clientSoc, &nRecvs, sizeof(nRecvs), 0);
+    nRecvs = ntohl(nRecvs);
+    std::cout << nRecvs << std::endl;
+    for (int i = 0; i < nRecvs; i++) {
     char buff[1024] = { 0 };
     recv(clientSoc, buff, 1024, 0);
     std::cout << buff <<  std::endl;
+    }
 close(servSoc); //cleanup
 }
 

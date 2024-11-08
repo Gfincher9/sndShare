@@ -6,6 +6,7 @@
 #include <cstring>
 #include <sys/stat.h>
 #include <fstream>
+#include <cmath>
 int port = { 0 };
 void confFetch() { //Check config file for persistent settings
     char buf[11];
@@ -43,6 +44,9 @@ void socketConnect(const char* ip, const char* path) {
 
 
     if (sockSuccess == 0) { //else begin
+    int n = ceil(fileSize / 1024)+1;
+    n=htonl(n);
+    send(clientSoc, &n, sizeof(n), 0);
     FILE *fp = fopen(path, "r");
     //check if file exists
     if (fp == NULL) { 
