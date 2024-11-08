@@ -36,7 +36,6 @@ void socketConnect(const char* ip) {
     int nRecvs = 0;
     recv(clientSoc, &nRecvs, sizeof(nRecvs), 0);
     nRecvs = ntohl(nRecvs);
-    std::cout << nRecvs << std::endl;
     for (int i = 0; i < nRecvs; i++) {
     char buff[1024] = { 0 };
     recv(clientSoc, buff, 1024, 0);
